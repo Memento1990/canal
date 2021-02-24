@@ -32,7 +32,7 @@ public class RdbMirrorDbSyncService {
 
     private Map<String, MirrorDbConfig> mirrorDbConfigCache;                                           // 镜像库配置
     private DataSource                  dataSource;
-    private RdbSyncService              rdbSyncService;                                                // rdbSyncService代理
+    protected RdbSyncService            rdbSyncService;                                                // rdbSyncService代理
 
     public RdbMirrorDbSyncService(Map<String, MirrorDbConfig> mirrorDbConfigCache, DataSource dataSource,
                                   Integer threads, Map<String, Map<String, Integer>> columnsTypeCache,

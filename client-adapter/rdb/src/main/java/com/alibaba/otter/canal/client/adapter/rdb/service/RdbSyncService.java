@@ -45,7 +45,7 @@ public class RdbSyncService {
     private Map<String, Map<String, Integer>> columnsTypeCache;
 
     private int                               threads = 3;
-    private boolean                           skipDupException;
+    protected boolean                         skipDupException;
 
     private List<SyncItem>[]                  dmlsPartition;
     private BatchExecutor[]                   batchExecutors;
@@ -401,7 +401,7 @@ public class RdbSyncService {
      * @param config 映射配置
      * @return 字段sqlType
      */
-    private Map<String, Integer> getTargetColumnType(Connection conn, MappingConfig config) {
+    protected Map<String, Integer> getTargetColumnType(Connection conn, MappingConfig config) {
         DbMapping dbMapping = config.getDbMapping();
         String cacheKey = config.getDestination() + "." + dbMapping.getDatabase() + "." + dbMapping.getTable();
         Map<String, Integer> columnType = columnsTypeCache.get(cacheKey);
@@ -433,12 +433,12 @@ public class RdbSyncService {
     /**
      * 拼接主键 where条件
      */
-    private void appendCondition(MappingConfig.DbMapping dbMapping, StringBuilder sql, Map<String, Integer> ctype,
+    protected void appendCondition(MappingConfig.DbMapping dbMapping, StringBuilder sql, Map<String, Integer> ctype,
                                  List<Map<String, ?>> values, Map<String, Object> d) {
         appendCondition(dbMapping, sql, ctype, values, d, null);
     }
 
-    private void appendCondition(MappingConfig.DbMapping dbMapping, StringBuilder sql, Map<String, Integer> ctype,
+    protected void appendCondition(MappingConfig.DbMapping dbMapping, StringBuilder sql, Map<String, Integer> ctype,
                                  List<Map<String, ?>> values, Map<String, Object> d, Map<String, Object> o) {
         // 拼接主键
         for (Map.Entry<String, String> entry : dbMapping.getTargetPk().entrySet()) {

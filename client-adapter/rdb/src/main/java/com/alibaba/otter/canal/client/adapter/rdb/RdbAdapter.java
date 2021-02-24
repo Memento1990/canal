@@ -8,6 +8,8 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
 
+import com.alibaba.otter.canal.client.adapter.rdb.service.ClickHouseRdbMirrorDbSyncService;
+import com.alibaba.otter.canal.client.adapter.rdb.service.ClickHouseRdbSyncService;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -140,15 +142,27 @@ public class RdbAdapter implements OuterAdapter {
 
         boolean skipDupException = BooleanUtils.toBoolean(configuration.getProperties()
             .getOrDefault("skipDupException", "true"));
-        rdbSyncService = new RdbSyncService(dataSource,
-            threads != null ? Integer.valueOf(threads) : null,
-            skipDupException);
+        if (properties.get("jdbc.driverClassName").equals("ru.yandex.clickhouse.ClickHouseDriver")) {
+            rdbSyncService = new ClickHouseRdbSyncService(dataSource,
+                    threads != null ? Integer.valueOf(threads) : null,
+                    skipDupException);
 
-        rdbMirrorDbSyncService = new RdbMirrorDbSyncService(mirrorDbConfigCache,
-            dataSource,
-            threads != null ? Integer.valueOf(threads) : null,
-            rdbSyncService.getColumnsTypeCache(),
-            skipDupException);
+            rdbMirrorDbSyncService = new ClickHouseRdbMirrorDbSyncService(mirrorDbConfigCache,
+                    dataSource,
+                    threads != null ? Integer.valueOf(threads) : null,
+                    rdbSyncService.getColumnsTypeCache(),
+                    skipDupException);
+        } else {
+            rdbSyncService = new RdbSyncService(dataSource,
+                    threads != null ? Integer.valueOf(threads) : null,
+                    skipDupException);
+
+            rdbMirrorDbSyncService = new RdbMirrorDbSyncService(mirrorDbConfigCache,
+                    dataSource,
+                    threads != null ? Integer.valueOf(threads) : null,
+                    rdbSyncService.getColumnsTypeCache(),
+                    skipDupException);
+        }
 
         rdbConfigMonitor = new RdbConfigMonitor();
         rdbConfigMonitor.init(configuration.getKey(), this, envProperties);
