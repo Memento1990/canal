@@ -9,7 +9,7 @@
 
 ![](https://github.com/bucketli/simpletools/blob/master/main_func_v2.png?raw=true)
 
-**canal [kə'næl]**，译意为水道/管道/沟渠，主要用途是基于 MySQL 数据库增量日志解析，提供增量数据订阅和消费
+**canal \[kə'næl\]**，译意为水道/管道/沟渠，主要用途是基于 MySQL 数据库增量日志解析，提供增量数据订阅和消费
 
 早期阿里巴巴因为杭州和美国双机房部署，存在跨机房同步的业务需求，实现方式主要是基于业务 trigger 获取增量变更。从 2010 年开始，业务逐步尝试数据库日志解析获取增量变更进行同步，由此衍生出了大量的数据库增量订阅和消费业务。
 
@@ -96,3 +96,20 @@ canal 作为 MySQL binlog 增量获取和解析工具，可将变更记录投递
 
 ## 问题反馈
 - 报告 issue: [github issues](https://github.com/alibaba/canal/issues)
+
+## 自定义扩展
+
+### 注意事项
+
+在 idea 中的打包方式:
+
+1. 在右侧菜单 Maven 中选择 `Toggle 'Skip Tests' Model`; // 跳过测试验证
+2. 然后点击 `Execute Maven Goal` 按钮, 执行命令 `mvn clean install` 即可在 `${base_dir}/target` 文件夹中生成
+   - canal.adapter-1.1.5-SNAPSHOT.tar.gz
+   - canal.admin-1.1.5-SNAPSHOT.tar.gz
+   - canal.deployer-1.1.5-SNAPSHOT.tar.gz
+   - canal.example-1.1.5-SNAPSHOT.tar.gz
+
+### 更新日志
+
+- [x] canal-adapter 增加对 clickhouse 的同步支持; at 2021年2月24日
